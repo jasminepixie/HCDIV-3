@@ -55,7 +55,7 @@ const priceChanges = d3.groups(chartData, d => d.flat_type).map(([flatType, data
 
   // Chart dimensions and margins
   const width = 800;
-  const height = 350;
+  const height = 320;
   const marginTop = 20;
   const marginRight = 150;
   const marginBottom = 30;
