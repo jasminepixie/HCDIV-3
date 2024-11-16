@@ -58,13 +58,25 @@
         /* Subheading (Description) */
         .description {
             text-align: center;
-            color: #2F2F2F;
-            font-size: 1rem;
+            color: #A4A4A4;
+            font-size: 0.8rem;
             margin-top: 10px;
             font-style: italic; /* Italic style */
             opacity: 0; /* Initial opacity set to 0 */
             transform: translateY(20px); /* Initial position below */
             animation: fade-in-description 1.5s ease-out 0.5s forwards; /* Apply fade-in with delay */
+        }
+
+        /* Additional short description below the heading */
+        .short-description {
+            text-align: center;
+            color: #555555; /* Dark grey text */
+            font-size: 1.1rem;
+            margin-top: 20px; /* Add space between heading and description */
+            padding: 0 20px; /* Add some padding to prevent text from touching the sides */
+            opacity: 0; /* Initial opacity set to 0 */
+            transform: translateY(20px); /* Initial position below */
+            animation: fade-in-description 1.5s ease-out 0.7s forwards; /* Apply fade-in with delay */
         }
 
         /* Fade-in animation for the entire body */
@@ -128,9 +140,14 @@
     <!-- Heading -->
     <h1>Trend in Resale Prices of Flat Types (1990–2024)</h1>
 
+    <!-- Short Description Below the Heading -->
+    <div class="short-description">
+        This hypothesis examines the total average increase and the average percentage increase in resale prices for each flat type from 1990 to 2024. By calculating both the total price increase and the percentage change for each flat type over this period, we aim to uncover how the resale market has evolved, highlighting significant price growth trends and identifying which flat types have seen the most substantial changes in value.
+    </div>
+
     <!-- Description -->
     <div class="description">
-        Please hover over the lines on the chart to view more detailed information.
+        (Please hover over the lines on the chart to view more detailed information.)
     </div>
 
     <div id="chart-container"></div>
