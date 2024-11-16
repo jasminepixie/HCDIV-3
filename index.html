@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D3 Line Chart Example</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        /* Container for the background image */
+        .background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://images.unsplash.com/photo-1601662528567-526cd06f6582?q=80&w=2815&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            opacity: 0; /* Initial opacity set to 0 */
+            z-index: -1; /* Ensure it stays in the background */
+            animation: fade-in-background 2s ease-out forwards; /* Background animation */
+        }
+
+        /* Fade-in animation for the background */
+        @keyframes fade-in-background {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif; /* Apply Poppins font globally */
+            margin: 0;
+            height: 100vh; /* Ensure the body takes up the full height */
+            overflow: hidden; /* Prevent scrolling */
+            animation: fade-in 2s ease-out forwards; /* Apply fade-in animation to body */
+        }
+
+        /* Heading Style */
+        h1 {
+            text-align: center;
+            color: #2F2F2F; /* Changed from black to #2F2F2F */
+            font-size: 2rem;
+            margin-top: 30px; /* Existing margin-top for space above */
+            margin-bottom: 5px; /* Decrease the bottom margin to bring it closer to the content */
+            padding-top: 20px; /* Add padding to the top of the heading */
+            z-index: 1; /* Ensure heading is above background */
+            position: relative; /* Allow z-index to work */
+            opacity: 0; /* Initial opacity set to 0 */
+            transform: translateY(30px); /* Initial position is 30px below */
+            animation: slide-up 1.5s ease-out 0.2s forwards, fade-in 2s ease-out forwards; /* Apply slide-up and fade-in animations */
+        }
+
+        /* Fade-in animation for the entire body */
+        @keyframes fade-in {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        svg {
+            width: 100%;
+            height: calc(100vh - 80px); /* Adjust height to fit within the viewport (subtract space for heading) */
+            opacity: 0; /* Initial opacity set to 0 */
+            transform: translateY(50px); /* Initial position is 50px below */
+            animation: slide-up 1.5s ease-out 0.5s forwards, fade-in 2s ease-out forwards; /* Fade-in and slide-up animations */
+        }
+
+        /* Slide-up animation for svg */
+        @keyframes slide-up {
+            0% {
+                transform: translateY(50px); /* Start below the normal position */
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0); /* End at the normal position */
+                opacity: 1;
+            }
+        }
+
+        #chart-container {
+            margin-top: 0; /* Remove any extra margin above the chart */
+        }
+
+        /* Smooth transitions for lines */
+        .line {
+            transition: opacity 0.3s ease, stroke-width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Background Image Div -->
+    <div class="background"></div>
+
+    <!-- Heading -->
+    <h1>Trend in Resale Prices of Flat Types (1990–2024)</h1>
+
+    <div id="chart-container"></div>
+
+    <!-- External JavaScript file -->
+    <script src="script.js"></script>
+</body>
+</html>
