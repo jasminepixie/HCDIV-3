@@ -55,6 +55,15 @@
             animation: slide-up 1.5s ease-out 0.2s forwards, fade-in 2s ease-out forwards; /* Apply slide-up and fade-in animations */
         }
 
+        /* Subheading (Description) */
+        .description {
+            text-align: center;
+            color: #2F2F2F;
+            font-size: 1rem;
+            margin-top: 10px;
+            font-style: italic; /* Italic style */
+        }
+
         /* Fade-in animation for the entire body */
         @keyframes fade-in {
             0% {
@@ -102,6 +111,11 @@
 
     <!-- Heading -->
     <h1>Trend in Resale Prices of Flat Types (1990–2024)</h1>
+
+    <!-- Description -->
+    <div class="description">
+        Please hover over the lines on the chart to view more detailed information.
+    </div>
 
     <div id="chart-container"></div>
 
