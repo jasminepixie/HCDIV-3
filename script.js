@@ -30,15 +30,28 @@ Promise.all([
     }));
   }).flat();
 
-  // Calculate price increase and percentage change for each flat_type
-  const priceChanges = d3.groups(chartData, d => d.flat_type).map(([flatType, data]) => {
-    const prices = data.sort((a, b) => a.year - b.year);
-    const startPrice = prices[0]?.average_price || 0;
-    const endPrice = prices[prices.length - 1]?.average_price || 0;
-    const priceChange = endPrice - startPrice;
-    const percentageChange = ((endPrice - startPrice) / startPrice) * 100;
-    return { flatType, priceChange, percentageChange };
-  });
+// Calculate price increase and percentage change for each flat_type
+const priceChanges = d3.groups(chartData, d => d.flat_type).map(([flatType, data]) => {
+  // Find the earliest year in the data for the current flat_type
+  const earliestYear = d3.min(data, d => d.year);
+  
+  // Find the average price for the earliest year available
+  const priceStart = data.find(d => d.year === earliestYear)?.average_price;
+  
+  // Find the average price in 2024
+  const priceEnd = data.find(d => d.year === 2024)?.average_price;
+
+  // Check if either price is missing or zero
+  if (!priceStart || !priceEnd || priceStart === 0) {
+    return { flatType, priceChange: 0, percentageChange: 0 }; // Skip or handle error
+  }
+
+  // Calculate price change and percentage change based on the start and end prices
+  const priceChange = priceEnd - priceStart;
+  const percentageChange = ((priceEnd - priceStart) / priceStart) * 100;
+
+  return { flatType, priceChange, percentageChange };
+});
 
   // Chart dimensions and margins
   const width = 800;
@@ -126,41 +139,50 @@ Promise.all([
     .style("visibility", "hidden")
     .style("pointer-events", "none");
 
-  // Add lines for each flat_type
+// Add lines for each flat_type
 svg.selectAll(".line")
-.data(nestedData)
-.join("path")
-.attr("class", "line")
-.attr("fill", "none")
-.attr("stroke", d => color(d[0]))
-.attr("stroke-width", 3)
-.attr("d", d => line(d[1]))
-.style("transition", "opacity 0.3s ease") // Smooth transition for opacity
-.on("mouseover", function(event, d) {
-  const flatType = d[0];
-  const { priceChange, percentageChange } = priceChanges.find(p => p.flatType === flatType);
+  .data(nestedData)
+  .join("path")
+  .attr("class", "line")
+  .attr("fill", "none")
+  .attr("stroke", d => color(d[0]))
+  .attr("stroke-width", 3)
+  .attr("d", d => line(d[1]))
+  .style("transition", "opacity 0.3s ease") // Smooth transition for opacity
+  .on("mouseover", function(event, d) {
+    const flatType = d[0];
+    const { priceChange, percentageChange } = priceChanges.find(p => p.flatType === flatType);
+  
+    // Find the earliest year and latest year data
+    const earliestYearData = d3.min(d[1], data => data.year);
+    const latestYearData = d3.max(d[1], data => data.year);
+  
+    const priceStart = d[1].find(d => d.year === earliestYearData)?.average_price;
+    const priceEnd = d[1].find(d => d.year === latestYearData)?.average_price;
+  
+    // Highlight the hovered line
+    d3.selectAll(".line").style("opacity", 0.2); // Fade out all lines
+    d3.select(this).style("opacity", 1).style("stroke-width", 4); // Highlight the current line
+  
+    // Show tooltip with average prices and price change information
+    tooltip.style("visibility", "visible")
+      .html(`<strong>${flatType}</strong><br><br>
+            Average price in ${earliestYearData}: ${d3.format("$,.0f")(priceStart)}<br>
+            Average price in ${latestYearData}: ${d3.format("$,.0f")(priceEnd)}<br>
+            Average price increased: ${d3.format("$,.0f")(priceChange)}<br>
+            <strong>Average percentage increase: ${percentageChange.toFixed(2)}%</strong>`);
+  })
+  .on("mousemove", event => {
+    tooltip.style("top", (event.pageY + 10) + "px")
+      .style("left", (event.pageX + 10) + "px");
+  })
+  .on("mouseout", function() {
+    // Reset opacity and stroke-width for all lines
+    d3.selectAll(".line").style("opacity", 1).style("stroke-width", 3);
 
-  // Highlight the hovered line
-  d3.selectAll(".line").style("opacity", 0.2); // Fade out all lines
-  d3.select(this).style("opacity", 1).style("stroke-width", 4); // Highlight the current line
-
-  // Show tooltip
-  tooltip.style("visibility", "visible")
-    .html(`<strong>${flatType}</strong><br>
-          Price increased: ${d3.format("$,.0f")(priceChange)}<br>
-          Percentage: ${percentageChange.toFixed(2)}%`);
-})
-.on("mousemove", event => {
-  tooltip.style("top", (event.pageY + 10) + "px")
-    .style("left", (event.pageX + 10) + "px");
-})
-.on("mouseout", function() {
-  // Reset opacity and stroke-width for all lines
-  d3.selectAll(".line").style("opacity", 1).style("stroke-width", 3);
-
-  // Hide tooltip
-  tooltip.style("visibility", "hidden");
-});
+    // Hide tooltip
+    tooltip.style("visibility", "hidden");
+  });
 
 // Add legend
 const legend = svg.append("g")
