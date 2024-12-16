@@ -73,12 +73,12 @@ const priceChanges = d3.groups(chartData, d => d.flat_type).map(([flatType, data
   // Group the data by flat_type
   const nestedData = d3.groups(chartData, d => d.flat_type);
 
-  // Define your custom color palette
-  const colorPalette = ["#797d62", "#9b9b7a", "#d9ae94", "#f1dca7", "#ffcb69", "#d08c60", "#997b66"];
-  const color = flatType => {
+// Define your custom color palette
+const colorPalette = ["#0072B2", "#E69F00", "#56B4E9", "#F0E442", "#009E73", "#D55E00", "#CC79A7"];
+const color = flatType => {
     const flatTypeIndex = nestedData.findIndex(d => d[0] === flatType);
     return colorPalette[flatTypeIndex % colorPalette.length];
-  };
+};
 
   // Create the line generator
   const line = d3.line()
